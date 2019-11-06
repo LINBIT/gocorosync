@@ -54,14 +54,19 @@ func GenerateConfig(nodeIPs []*net.IP, clusterName string) string {
 }
 
 // GenerateAuthkey calls corosync-keygen in order to generate an authkey and
-// write it to the standard location (/etc/corosync/authkey). It returns the
-// location of the authkey file and an error, if applicable.
-func GenerateAuthkey() (string, error) {
-	if err := exec.Command("corosync-keygen", "-l").Run(); err != nil {
-		return "", err
-	}
+// write it to a location specified by `path`. It returns an error, if applicable.
+func GenerateAuthkey(path string) error {
+	err := exec.Command(
+		"corosync-keygen",
+		// by default corosync-keygen asks for user input during key
+		// generation to get some entropy. as we're running "headless",
+		// we don't really have the possibility to mash around the keyboard,
+		// so use the "less secure" option.
+		"--less-secure",
+		"--key-file="+path,
+	).Run()
 
-	return "/etc/corosync/authkey", nil
+	return err
 }
 
 //Quorum information
@@ -110,7 +115,7 @@ func getQuorate(output string) (bool, error) {
 	r := regexp.MustCompile(`Quorate:\s*(?P<yesno>Yes|No)`)
 	match := r.FindStringSubmatch(output)
 	if len(match) == 0 {
-		return false, fmt.Errorf("error getting quoruate: %s", ErrInvalidOutput.Error())
+		return false, fmt.Errorf("error getting quorate: %s", ErrInvalidOutput.Error())
 	}
 
 	return match[1] == "Yes", nil
