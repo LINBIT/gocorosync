@@ -35,7 +35,7 @@ logging {
   to_syslog: yes
 }`
 
-func GenerateConfig(nodeIPs []*net.IP, clusterName string) string {
+func GenerateConfig(nodeIPs []net.IP, clusterName string) string {
 	funcMap := template.FuncMap{
 		"inc": func(i int) int {
 			return i + 1
@@ -43,7 +43,7 @@ func GenerateConfig(nodeIPs []*net.IP, clusterName string) string {
 	}
 	t := template.Must(template.New("").Funcs(funcMap).Parse(corotmpl))
 	type data struct {
-		IPs  []*net.IP
+		IPs  []net.IP
 		Name string
 	}
 
