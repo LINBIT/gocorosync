@@ -1,5 +1,8 @@
 # gocorosync
 
+[![GoDoc](https://godoc.org/github.com/LINBIT/gocorosync?status.svg)](https://godoc.org/github.com/LINBIT/gocorosync)
+
+
 A Go package to interact with a local corosync installation.
 
 ## Installation
