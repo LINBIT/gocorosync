@@ -69,29 +69,6 @@ func GenerateAuthkey(path string) error {
 	return err
 }
 
-//Quorum information
-//------------------
-//Date:             Tue Oct 29 14:11:19 2019
-//Quorum provider:  corosync_votequorum
-//Nodes:            3
-//Node ID:          2
-//Ring ID:          1/12
-//Quorate:          Yes
-//
-//Votequorum information
-//----------------------
-//Expected votes:   3
-//Highest expected: 3
-//Total votes:      3
-//Quorum:           2
-//Flags:            Quorate
-//
-//Membership information
-//----------------------
-//    Nodeid      Votes    Qdevice Name
-//         1          1         NR 192.168.123.11
-//         2          1         NR 192.168.123.12 (local)
-//         3          1         NR 192.168.123.13
 type CorosyncNode struct {
 	ID int
 	IP net.IP
@@ -132,7 +109,7 @@ func getVotes(output string) (int, error) {
 }
 
 func getVotesExpected(output string) (int, error) {
-	r := regexp.MustCompile(`Expected votes:\s*(?P<votes>\d)`)
+	r := regexp.MustCompile(`Expected votes:\s*(?P<votes>\d+)`)
 	match := r.FindStringSubmatch(output)
 	if len(match) == 0 {
 		return 0, fmt.Errorf("error getting expected votes: %s", ErrInvalidOutput.Error())
